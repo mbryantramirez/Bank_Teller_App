@@ -101,8 +101,23 @@ public class User implements BankTeller {
         Customer.setSuffix(Integer.parseInt(choice));
         System.out.println("Date of birth? [MM/DD/YYYY]");
         choice = scanner.next();
-        Customer.setDOB(choice.substring(0,2), choice.substring(3,5), choice.substring(6));
+        Customer.setDOB(choice.substring(0, 2), choice.substring(3, 5), choice.substring(6));
         showCreate();
+        System.out.println("Is all of this information correct?[Y/n]");
+        choice = scanner.next();
+        switch(choice){
+            case "Y":
+            case "y":
+                System.out.println("YOU DID IT!");
+                break;
+            case "n":
+            case "N":
+                create();
+                break;
+        }
+
+
+
 
     }
 
