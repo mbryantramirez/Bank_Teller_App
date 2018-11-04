@@ -1,5 +1,6 @@
 package Java_Bank_Pursuit_HW_FABIAN_KELVEEN;
 
+import java.util.Date;
 import java.util.HashMap;
 
 public class Customer extends User {
@@ -24,9 +25,9 @@ public class Customer extends User {
 
     public static void setmName(String mName) {
 
-        if(mName.toLowerCase().equals("none")){
+        if (mName.toLowerCase().equals("none")) {
             Customer.mName = "";
-        }else{
+        } else {
             Customer.mName = mName;
         }
 
@@ -44,19 +45,21 @@ public class Customer extends User {
         return suffix;
     }
 
-    public static void setSuffix(int choice){
-        for(int i = 0; i < 7; i++){
-            if(choice == i+1){
+    public static void setSuffix(int choice) {
+        for (int i = 0; i < 7; i++) {
+            if (choice == i + 1) {
                 suffix = sArray[i];
             }
         }
     }
 
-    public static void setDOB(String month, String day, String year){ //FIXME: We need to set boundaries for our function.
-        new DateOfBirth(month, day, year);
+    public static void setDOB(String month, String day, String year) { //FIXME: We need to set boundaries for our function.
+        DateOfBirth.setMonth(month);
+        DateOfBirth.setDay(day);
+        DateOfBirth.setYear(year);
     }
-    
-    public static String getDOB(){
+
+    public static String getDOB() {
         return DateOfBirth.getMonth() + "/" + DateOfBirth.getDay() + "/" + DateOfBirth.getYear();
     }
 

@@ -18,7 +18,13 @@ public class DateOfBirth{
     }
 
     public static void setMonth(String month) {
-        DateOfBirth.month = month;
+
+        if(Integer.parseInt(month) >= 1 && Integer.parseInt(month) <= 12){
+            DateOfBirth.month = month;
+        }else{
+            DateOfBirth.month = "";
+        }
+
     }
 
     public static String getDay() {
@@ -26,7 +32,13 @@ public class DateOfBirth{
     }
 
     public static void setDay(String day) {
-        DateOfBirth.day = day;
+
+        if(Integer.parseInt(day) >= 1 && Integer.parseInt(day) <= 31){
+            DateOfBirth.day = day;
+        }else{
+            DateOfBirth.day = "";
+        }
+
     }
 
     public static String getYear() {
@@ -34,7 +46,11 @@ public class DateOfBirth{
     }
 
     public static void setYear(String year) {
-        DateOfBirth.year = year;
+        if(Integer.parseInt(year) >= 1900 && Integer.parseInt(year) <= 2018) {
+            DateOfBirth.year = year;
+        }else{
+            DateOfBirth.year = "";
+        }
     }
 
 }
