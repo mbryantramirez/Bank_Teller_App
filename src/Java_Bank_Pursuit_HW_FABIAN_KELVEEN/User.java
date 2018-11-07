@@ -1,11 +1,16 @@
 package Java_Bank_Pursuit_HW_FABIAN_KELVEEN;
 
-import java.io.Console;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Scanner;
 
 public class User implements BankTeller {
-    Scanner scanner = new Scanner(System.in);
-    String userName, passWord, choice, month, day, year;
+    private Scanner scanner = new Scanner(System.in);
+    private String userName, passWord, choice;
+    private int choice1;
+    public static ArrayList<Customer> list = new ArrayList<>();
+    public static Customer customer = new Customer();
+    public static int position = 0;
 
 
     @Override
@@ -38,8 +43,6 @@ public class User implements BankTeller {
             }
             System.out.println("|------------------------------------------|");
         }
-        ConsoleColors.resetColor();
-
 
     }
 
@@ -87,60 +90,139 @@ public class User implements BankTeller {
 
 
     public void create() {
-        System.out.println("What is your first name? ");
-        choice = scanner.next();
-        Customer.setFname(choice);
-        System.out.println("What is your middle name? [input 'none' if there's no middle name]");
-        choice = scanner.next();
-        Customer.setmName(choice);
-        System.out.println("What is your last name?");
-        choice = scanner.next();
-        Customer.setlName(choice);
-        System.out.println("Suffix? [1.Jr, 2.Sr, 3.II, 4.III, 5.IV, 6.V, 7.None]");
-        choice = scanner.next();
-        Customer.setSuffix(Integer.parseInt(choice));
-        System.out.println("Date of birth? [MM/DD/YYYY]");
-        choice = scanner.next();
-        Customer.setDOB(choice.substring(0, 2), choice.substring(3, 5), choice.substring(6));
-        showCreate();
-        System.out.println("Is all of this information correct?[Y/n]");
-        choice = scanner.next();
-        switch(choice){
+        customer.createNewCustomer();
+
+        System.out.println("---------------");
+        System.out.println("Name: " + customer.getName());
+        System.out.println("DOB: " + customer.getDob());
+        System.out.println("Social Security: " + customer.getSS());
+        System.out.println("---------------");
+        System.out.println("Correct?");
+
+        switch (scanner.next()) {
             case "Y":
             case "y":
-                System.out.println("YOU DID IT!");
+                list.add(customer);
+                customer = new Customer();
+                menu();
                 break;
             case "n":
             case "N":
                 create();
                 break;
+            default:
+                System.out.println("Wrong answer. Try again");
+                create();
         }
-
-
-
-
     }
 
-    public void showCreate() {
-        System.out.println("|-------------------------------|");
-        System.out.println("|Name:                           ");
-        System.out.println("|" + Customer.getFname() + " " + Customer.getmName() + " " + Customer.getlName() + " " + Customer.getSuffix());
-        System.out.println("|Date of Birth: " + Customer.getDOB());
-        System.out.println("|-------------------------------|");
-
-
-    }
 
     public void read() {
+        if (list.isEmpty()) {
+            System.out.println("There are no accounts. Please create some accounts in the menu.");
+            menu();
+        } else {
+            System.out.println("Who's information would you like to read? Press 0 to go back to menu");
+            for (int i = 0; i < list.size(); i++) {
+                System.out.println(i + 1 + ". " + list.get(i).getName());
+            }
+            position = scanner.nextInt();
+            if (position == 0) {
+                menu();
+            } else {
+                if (!(list.isEmpty()) && position <= list.size()) {
+                    System.out.println("Name: " + list.get(position - 1).getName());
+                    System.out.println("DOB: " + list.get(position - 1).getDob());
+                    System.out.println("Social Security: " + list.get(position - 1).getSS());
+                } else {
+                    System.out.println("List is either empty or there was a wrong entry. Please try again.");
+                    menu();
+                }
+
+                System.out.println("Go Back To Menu?[Y/n]");
+                switch (scanner.next()) {
+                    case "y":
+                    case "Y":
+                    case "Yes":
+                    case "yes":
+                        menu();
+                        break;
+                    case "n":
+                    case "N":
+                    case "No":
+                    case "no":
+                        read();
+                        break;
+                }
+            }
+        }
 
     }
 
     public void update() {
+        if (list.isEmpty()) {
+            System.out.println("There are no accounts. Please create some accounts in the menu.");
+            menu();
+        } else {
+            System.out.println("Who's information would you like update? Press 0 to go back to menu");
+            for (int i = 0; i < list.size(); i++) {
+                System.out.println(i + 1 + ". " + list.get(i).getName());
+            }
+            position = scanner.nextInt();
 
+            if (position == 0) {
+                menu();
+            } else {
+
+                System.out.println("What would you like to change?");
+                System.out.println("1. Name");
+                System.out.println("2. Date of Birth");
+                System.out.println("3. Social Security");
+                System.out.println("4. Exit");
+
+                switch (scanner.next()) {
+                    case "1":
+                        list.get(position - 1).editName();
+                        break;
+                    case "2":
+                        list.get(position - 1).editDob();
+                        break;
+                    case "3":
+                        list.get(position - 1).editSS();
+                        break;
+                    case "4":
+                        menu();
+                        break;
+                    default:
+                        System.out.println("Wrong answer. BACK TO MAIN MENU");
+                        menu();
+                        break;
+                }
+
+            }
+        }
     }
 
     public void delete() {
-
+        if (list.isEmpty()) {
+            System.out.println("There are no accounts. Please create some accounts in the menu.");
+            menu();
+        } else {
+            System.out.println("Who's information would you like to delete? Press 0 to go back to menu");
+            for (int i = 0; i < list.size(); i++) {
+                System.out.println(i + 1 + ". " + list.get(i).getName());
+            }
+            position = scanner.nextInt();
+            if (position == 0) {
+                menu();
+            } else {
+                list.remove(position - 1);
+                for (int i = 0; i < list.size(); i++) {
+                    System.out.println(i + 1 + ". " + list.get(i).getName());
+                }
+                menu();
+            }
+        }
     }
 
 }

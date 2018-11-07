@@ -2,44 +2,51 @@ package Java_Bank_Pursuit_HW_FABIAN_KELVEEN;
 
 public class ConsoleColors {
 
-    public static String blueBright(){
-        return  ConsoleColors.BLUE_BOLD_BRIGHT;
+    public static String blueBright() {
+        return ConsoleColors.BLUE_BOLD_BRIGHT;
     }
 
-    public static String resetColor(){
+    public static String resetColor() {
         return ConsoleColors.RESET;
     }
 
-    public static String redBold(){
+    public static String redBold() {
         return ConsoleColors.RED_BOLD_BRIGHT;
     }
+
     //regular colors
-    public static String black(){
+    public static String black() {
         return ConsoleColors.BLACK;
     }
-    public static String red(){
+
+    public static String red() {
         return ConsoleColors.RED;
     }
-    public static String green(){
+
+    public static String green() {
         return ConsoleColors.GREEN;
     }
-    public static String yellow(){
+
+    public static String yellow() {
         return ConsoleColors.YELLOW;
     }
-    public static String blue(){
+
+    public static String blue() {
         return ConsoleColors.BLUE;
     }
 
-    public static String cyan(){
+    public static String cyan() {
         return ConsoleColors.CYAN;
     }
 
-    public static String purple(){
+    public static String purple() {
         return ConsoleColors.PURPLE;
     }
-    public static String white(){
+
+    public static String white() {
         return ConsoleColors.WHITE;
     }
+
     // Reset
     public static final String RESET = "\033[0m";  // Text Reset
 
