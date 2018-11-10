@@ -22,10 +22,14 @@ public class DateOfBirth {
 
     public void setMonth(String month) {
 
-        if (Integer.parseInt(month) >= 1 && Integer.parseInt(month) <= 12) {
-            this.month = month;
-        } else {
-            this.month = "";
+        try {
+            if (Integer.parseInt(month) >= 1 && Integer.parseInt(month) <= 12) {
+                this.month = month;
+            } else {
+                this.month = "";
+            }
+        }catch(NumberFormatException e){
+            this.month = null;
         }
 
     }
@@ -35,11 +39,14 @@ public class DateOfBirth {
     }
 
     public void setDay(String day) {
-
-        if (Integer.parseInt(day) >= 1 && Integer.parseInt(day) <= 31) {
-            this.day = day;
-        } else {
-            this.day = "";
+        try {
+            if (Integer.parseInt(day) >= 1 && Integer.parseInt(day) <= 31) {
+                this.day = day;
+            } else {
+                this.day = "";
+            }
+        }catch(NumberFormatException e){
+            this.day = null;
         }
 
     }
@@ -49,10 +56,14 @@ public class DateOfBirth {
     }
 
     public void setYear(String year) {
-        if (Integer.parseInt(year) >= 1900 && Integer.parseInt(year) <= 2018) {
-            this.year = year;
-        } else {
-            this.year = "";
+        try {
+            if (Integer.parseInt(year) >= 1900 && Integer.parseInt(year) <= 2018) {
+                this.year = year;
+            } else {
+                this.year = "";
+            }
+        }catch(NumberFormatException e){
+            this.year = null;
         }
     }
 

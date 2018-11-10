@@ -1,90 +1,86 @@
 package Java_Bank_Pursuit_HW_FABIAN_KELVEEN;
 
+import java.util.InputMismatchException;
 import java.util.Scanner;
 
 public class BankAccount {
-    private int checking;
-    private int credit;
+    private double checking;
+    private double credit;
+    private double maxCredit;
     private Scanner scanner = new Scanner(System.in);
 
-    public int getChecking() {
+    public double getMaxCredit() {
+        return maxCredit;
+    }
+
+    public double getChecking() {
         return checking;
     }
 
-    public void setChecking(int checking) {
+    public void setChecking(double checking) {
         this.checking = checking;
     }
 
-    public int getCredit() {
+
+    public double getCredit() {
         return credit;
     }
 
-    public void setCredit(int credit) {
-        this.credit = credit;
-    }
-
-    public void withDrawal() {
-        int amount;
-
-        System.out.println("What is the amount that you would like to withdraw?");
-        amount = scanner.nextInt();
-        if (credit != 0 && checking != 0 && amount <= credit && amount <= checking) {
-            System.out.println("Which account would you like to withdraw from: 1. Checking or 2. Credit?");
-            switch (scanner.next()) {
-                case "1":
-                case "checking":
-                case "Checking":
-                    checking = checking - amount;
-                    break;
-                case "2":
-                case "credit":
-                case "Credit":
-                    if (amount <= 300) {
-                        credit = credit - amount;
-                        break;
-                    } else {
-                        System.out.println("Max limit of withdrawal for credit cards are $300. Please try again.");
-                        withDrawal();
-                        break;
-                    }
-                default:
-                    System.out.println("Wrong answer. Please try again.");
-                    break;
-
+    public void setCredit(String salary) {
+            if (Double.parseDouble(salary) <= 18000 && Double.parseDouble(salary) >= 0) {
+                maxCredit = 1000.0;
+            } else if (Double.parseDouble(salary) <= 25000) {
+                maxCredit = 1500.0;
+            } else if (Double.parseDouble(salary) <= 40000) {
+                maxCredit = 3000.0;
+            } else if (Double.parseDouble(salary) <= 50000) {
+                maxCredit = 4000.0;
+            } else if (Double.parseDouble(salary) >= 55000) {
+                maxCredit = 5000.0;
+            } else {
+                System.out.println("Sorry you do not qualify");
+                maxCredit = 0;
             }
-        } else {
-            System.out.println("Not enough funds. Please try again.");
-            withDrawal();
-        }
-
+            credit = maxCredit;
     }
 
-    public void deposit() {
-        int amount;
 
-        System.out.println("What is the amount that you would like deposit?");
-        amount = scanner.nextInt();
-        System.out.println("Which account would you like to add to: 1. Checking or 2. Credit?");
-        switch (scanner.next()) {
-            case "1":
-            case "checking":
-            case "Checking":
-                checking = checking + amount;
-                break;
-            case "2":
-            case "credit":
-            case "Credit":
-                if (amount < credit && credit != 3000) {
-                    credit = credit + amount;
-                } else {
-                    System.out.println("Credit card paid off.");
-                    break;
-                }
-            default:
-                System.out.println("Wrong answer. Please try again.");
-                deposit();
-                break;
+    public void creditWithdrawal(String amount){
+        if(Double.parseDouble(amount) > 300){
+            System.out.println("Withdrawal amount is greater than max amount: $300.00. Please try again.");
+        }else{
+            credit = credit - Double.parseDouble(amount);
+        }
+    }
+    public void checkingWithdrawal(String amount){
+        if((checking >= 0 && Double.parseDouble(amount) <= checking)){
+            checking = checking - Double.parseDouble(amount);
+        }else{
+            System.out.println("Withdrawal amount too high or there is no balance in your account.");
+        }
+    }
 
+    public void depositCredit(String amount) {
+        if(Integer.parseInt(amount) >= 0){
+            if ((Double.parseDouble(amount) + credit) <= maxCredit && (Double.parseDouble(amount) + credit) >= 1) {
+                credit = credit + Integer.parseInt(amount);
+            } else if((Double.parseDouble(amount) + credit) > maxCredit) {
+                System.out.println("Credit card paid off.");
+            }else{
+                System.out.println("Wrong entry. Please try again.");
+            }
+        }else {
+            System.out.println("Wrong entry. Please try again");
+        }
+    }
+    public void depositChecking(String amount){
+        if(Double.parseDouble(amount) >= 0){
+            if((Double.parseDouble(amount) + checking) > 0){
+                checking = Double.parseDouble(amount) + checking;
+            }
+            else{
+                System.out.println("No funds added");
+            }
         }
     }
 }

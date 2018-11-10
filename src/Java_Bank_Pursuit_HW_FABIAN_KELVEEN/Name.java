@@ -1,11 +1,11 @@
 package Java_Bank_Pursuit_HW_FABIAN_KELVEEN;
 
 public class Name {
-    private String fName = "";
-    private String mName = "";
-    private String lName = "";
+    private String fName;
+    private String mName;
+    private String lName;
     private final String[] sArray = {"Jr", "Sr", "II", "III", "IV", "V", ""};
-    private String suffix = "";
+    private String suffix;
 
 
     public void setfName(String fName) {
@@ -45,11 +45,15 @@ public class Name {
         return lName;
     }
 
-    public void setSuffix(int suffix) {
-        if (suffix >= 1 && suffix <= 6) {
-            this.suffix = sArray[suffix - 1];
-        } else {
-            this.suffix = sArray[6];
+    public void setSuffix(String suffix) {
+        try {
+            if (Integer.parseInt(suffix) >= 1 && Integer.parseInt(suffix) <= 6) {
+                this.suffix = sArray[Integer.parseInt(suffix) - 1];
+            } else {
+                this.suffix = "";
+            }
+        }catch(NumberFormatException e){
+            this.suffix = null;
         }
     }
 
