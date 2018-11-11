@@ -1,21 +1,50 @@
 package Java_Bank_Pursuit_HW_FABIAN_KELVEEN;
 
-import java.util.InputMismatchException;
+import java.util.Random;
 import java.util.Scanner;
 
-public class Customer extends Teller {
-    Scanner scanner = new Scanner(System.in);
-    String choice, salary, amount;
-    double max;
+public class Customer {
+    private Scanner scanner = new Scanner(System.in);
+    private String choice;
+    private String salary;
+    private double max;
+    private Random random = new Random();
+    private int ID = random.nextInt(9999999) + 1000001;
+    private Name name = new Name();
+    private DateOfBirth dob = new DateOfBirth();
+    private SocialSecurity ss = new SocialSecurity();
+    private Sex sex = new Sex();
+    private Citizen citizen = new Citizen();
+    private Veteran veteran = new Veteran();
+    private BankAccount bankAccount = new BankAccount();
 
 
-    Name name = new Name();
-    DateOfBirth dob = new DateOfBirth();
-    SocialSecurity ss = new SocialSecurity();
-    Sex sex = new Sex();
-    Citizen citizen = new Citizen();
-    Veteran veteran = new Veteran();
-    BankAccount bankAccount = new BankAccount();
+
+    Customer(){}
+
+    Customer(String fName, String mName, String lName, String suffix,
+             String month, String day, String year, String ss, String sex,
+             String citizen, String veteran, String checking, String credit) {
+        this.name.setfName(fName);
+        this.name.setmName(mName);
+        this.name.setlName(lName);
+        this.name.setSuffix(suffix);
+        this.dob.setMonth(month);
+        this.dob.setDay(day);
+        this.dob.setYear(year);
+        this.ss.setSocialSecurity1(ss.substring(0, 3));
+        this.ss.setSocialSecurity2(ss.substring(4, 6));
+        this.ss.setSocialSecurity3(ss.substring(7, 11));
+        this.sex.setSex(sex);
+        this.citizen.setCitizen(citizen);
+        this.veteran.setVeteran(veteran);
+        this.bankAccount.setChecking(checking);
+        this.bankAccount.setCredit(credit);
+    }
+
+    public int getID() {
+        return ID;
+    }
 
     public void createNewCustomer() {
         do {
@@ -119,9 +148,9 @@ public class Customer extends Teller {
                         System.out.println("Please enter how much you would like to deposit. Minimum = $25.00");
                         choice = scanner.next();
                         if (Double.parseDouble(choice) >= 25.00) {
-                            bankAccount.setChecking(Double.parseDouble(choice));
+                            bankAccount.setChecking(choice);
                         } else {
-                            bankAccount.setChecking(0.0);
+                            bankAccount.setChecking(null);
                         }
                     } while (bankAccount.getChecking() <= 0);
                     break;
@@ -148,15 +177,15 @@ public class Customer extends Teller {
             System.out.println("1. Sex");
             System.out.println("2. Exit");
 
-            switch (scanner.nextInt()) {
-                case 1:
+            switch (scanner.next()) {
+                case "1":
                     System.out.println("Current Sex: " + sex.getSex());
                     do {
                         System.out.println("New Sex:[M/f]");
                         sex.setSex(scanner.next());
                     } while (sex.getSex() == null);
                     break;
-                case 2:
+                case "2":
                     System.out.println("Sex: " + getSex());
                     System.out.println("Is this information correct?[Y/n]");
 
@@ -179,6 +208,7 @@ public class Customer extends Teller {
                     break;
                 default:
                     System.out.println("Wrong answer. Please try again");
+                    break;
             }
         } while (isSex);
     }
@@ -217,8 +247,10 @@ public class Customer extends Teller {
                     break;
                 case "4":
                     System.out.println("Current Suffix: " + name.getSuffix());
-                    System.out.println("New Suffix [1.Jr, 2.Sr, 3.II 4.III 5.IV 6.V 7.None]: ");
-                    name.setSuffix(scanner.next());
+                    do {
+                        System.out.println("New Suffix [1.Jr, 2.Sr, 3.II 4.III 5.IV 6.V 7.None]: ");
+                        name.setSuffix(scanner.next());
+                    } while (name.getSuffix() == null);
                     break;
                 case "5":
                     System.out.println("Name: " + getName());
@@ -485,6 +517,7 @@ public class Customer extends Teller {
             System.out.println("2. Checking");
             System.out.println("3. Exit");
 
+            String amount;
             switch (scanner.next()) {
                 case "1":
                 case "credit":
@@ -515,27 +548,30 @@ public class Customer extends Teller {
                             } while (amount == null);
                             break;
                         case "2":
+                        case "Withdraw":
+                        case "withdraw":
+                        case "WITHDRAW":
                             System.out.println("Current Amount: " + bankAccount.getCredit());
                             System.out.println("Max Amount: " + bankAccount.getMaxCredit());
-                            do{
-                                try{
-                                    if(max >= 300){
+                            do {
+                                try {
+                                    if (max >= 300) {
                                         System.out.println("Reached max limit of withdrawal for the week. Please try again next week.");
                                         break;
-                                    }else {
+                                    } else {
                                         System.out.println("What is the amount that you would like to withdraw?($300.00 Max Limit)");
                                         amount = scanner.next();
-                                        if(Double.parseDouble(amount) <= 300) {
+                                        if (Double.parseDouble(amount) <= 300) {
                                             max = max + Double.parseDouble(amount);
                                         }
                                         bankAccount.creditWithdrawal(amount);
                                         System.out.println("Withdrew: " + amount);
                                         System.out.println("New Amount: " + bankAccount.getCredit() + "\n");
                                     }
-                                }catch(NumberFormatException e){
+                                } catch (NumberFormatException e) {
                                     amount = null;
                                 }
-                            }while(amount == null);
+                            } while (amount == null);
                             break;
                         case "3":
                             System.out.println("Current Salary: " + salary);
@@ -589,19 +625,19 @@ public class Customer extends Teller {
                         case "Withdraw":
                         case "withdraw":
                         case "WITHDRAW":
-                            do{
-                                try{
+                            do {
+                                try {
                                     System.out.println("Current amount: " + bankAccount.getChecking());
                                     System.out.println("What is that amount that you would like withdraw");
                                     amount = scanner.next();
                                     bankAccount.checkingWithdrawal(amount);
                                     System.out.println("New Amount: " + bankAccount.getChecking() + "\n");
-                                }catch(NumberFormatException e){
+                                } catch (NumberFormatException e) {
                                     amount = null;
                                 }
-                            }while(amount == null);
+                            } while (amount == null);
                             break;
-                        case "4":
+                        case "3":
                         case "Exit":
                         case "exit":
                         case "EXIT":

@@ -7,6 +7,9 @@ public class BankAccount {
     private double checking;
     private double credit;
     private double maxCredit;
+
+
+
     private Scanner scanner = new Scanner(System.in);
 
     public double getMaxCredit() {
@@ -17,8 +20,13 @@ public class BankAccount {
         return checking;
     }
 
-    public void setChecking(double checking) {
-        this.checking = checking;
+    public void setChecking(String checking) {
+        if(checking == null){
+            this.checking = 0;
+        }else{
+            this.checking = Double.parseDouble(checking);
+        }
+
     }
 
 
@@ -27,7 +35,7 @@ public class BankAccount {
     }
 
     public void setCredit(String salary) {
-            if (Double.parseDouble(salary) <= 18000 && Double.parseDouble(salary) >= 0) {
+            if (Double.parseDouble(salary) <= 18000 && Double.parseDouble(salary) > 10000) {
                 maxCredit = 1000.0;
             } else if (Double.parseDouble(salary) <= 25000) {
                 maxCredit = 1500.0;

@@ -7,8 +7,8 @@ public class Main {
 
         Teller teller1 = new Teller();
 
-        teller1.signIn();
 
+        teller1.signIn();
 
     }
 }

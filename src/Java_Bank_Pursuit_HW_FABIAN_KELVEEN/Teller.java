@@ -5,13 +5,58 @@ import java.util.*;
 public class Teller implements BankTeller {
     private Scanner scanner = new Scanner(System.in);
     private String userName, passWord, choice;
-    public static ArrayList<Customer> list = new ArrayList<>();
-    public static Customer customer = new Customer();
-    public static int position = 0;
-    private Random random = new Random();
-    public static HashMap<String, Integer> hashMap = new HashMap<>();
+    private ArrayList<Customer> list = new ArrayList<>();
+    private Customer customer = new Customer();
+    private int position = 0;
+    private HashMap<String, Integer> hashMap = new HashMap<>();
+    private HashSet<String> hashSet = new HashSet<>();
 
 
+
+    public void findAccount(){
+        System.out.println("Which account are you looking for?");
+        choice = scanner.next();
+
+        if(hashSet.contains(choice)){
+            System.out.println("The account " + choice + " exists.");
+            System.out.println("What would you like to do?");
+            System.out.println("1. Read information");
+            System.out.println("2. Update information");
+            System.out.println("3. Delete account");
+
+            switch(scanner.next().toLowerCase()){
+                case "1":
+                case "read":
+                case "2":
+                case "update":
+                case "3":
+                case "delete":
+
+            }
+        }
+        else{
+            System.out.println("Sorry the account you are looking for does not exist. Please try again.");
+        }
+    }
+    public void initialCustomers() {
+        Customer abrams = new Customer("John", "", "Abrams",
+                "7", "10", "19", "1989",
+                "555-55-5555", "m", "yes",
+                "1", "500", "50000");
+        Customer sally = new Customer ("Sally", "", "Myers", "4", "05", "25",
+                "1990", "111-11-1111", "f", "no", "2", "50000", "60000");
+        Customer harold = new Customer("Harold", "Martavious", "DeGrasse",
+                "5", "06", "06", "1995", "000-00-0000", "m", "yes", "3", "400", "25000");
+        Customer daisy = new Customer("Daisy", "Rose", "Pedals", "7", "04", "16", "2001", "888-88-8888",
+                "f", "y", "2", "200", "8000");
+        Customer street = new Customer("Street", "", "Fighter", "4", "01", "10", "1989", "222-22-2222","f",
+                "no", "3", "500000", "5000");
+        list.add(abrams);
+        list.add(sally);
+        list.add(harold);
+        list.add(daisy);
+        list.add(street);
+    }
     @Override
     public void logo() {
         System.out.println("Logo");
@@ -34,6 +79,7 @@ public class Teller implements BankTeller {
 
 
             if (userName.equals("Kelveen") && passWord.equals("Fabian")) {
+                initialCustomers();
                 menu();
                 break;
             } else {
@@ -43,30 +89,12 @@ public class Teller implements BankTeller {
                         + ConsoleColors.BLUE);
             }
             System.out.println("|------------------------------------------|");
-        } while (userName != "Kelveen" && passWord != "Fabian");
+        } while (!userName.equals("Kelveen") && !passWord.equals("Fabian"));
     }
 
     @Override
     public void menu() {
         boolean isMenu = true;
-        if (userName == null) {
-            System.out.println("Username is null");
-        }
-
-        /**
-         System.out.println("Please input USERNAME for verification.");
-         switch(scanner.next()){
-         case "Kelveen":
-         userName = "Kelveen";
-         //   menu();
-         break;
-         default:
-         System.out.println("Wrong username entry. Please try again.");
-         //   menu();
-         break;
-         }
-         */
-
 
         do {
             System.out.println("|------------------------------------------|");
@@ -108,6 +136,7 @@ public class Teller implements BankTeller {
                     break;
                 case "6":
                     isMenu = false;
+                    list.clear();
                     signIn();
                     break;
                 default:
@@ -120,7 +149,6 @@ public class Teller implements BankTeller {
 
     private void create() {
         customer.createNewCustomer();
-        int ID = random.nextInt(9999999) + 1000001;
 
         System.out.println("---------------");
         System.out.println("Name: " + customer.getName());
@@ -131,6 +159,7 @@ public class Teller implements BankTeller {
         System.out.println("Veteran: " + customer.getVeteran());
         System.out.println("New Credit Balance: " + customer.getCreditBalance());
         System.out.println("New Checking Balance: " + customer.getCheckingBalance());
+        System.out.println("Bank ID: " + customer.getID());
         System.out.println("---------------");
         System.out.println("Correct?");
 
@@ -138,9 +167,8 @@ public class Teller implements BankTeller {
             case "Y":
             case "y":
                 list.add(customer);
-                hashMap.put(customer.getName(), ID);
+                hashMap.put(customer.getName(), customer.getID());
                 customer = new Customer();
-                ID = 0;
                 break;
             case "n":
             case "N":
@@ -155,50 +183,49 @@ public class Teller implements BankTeller {
 
 
     private void read() {
-        do {
-            if (list.isEmpty()) {
-                System.out.println("There are no accounts. Please create new accounts in the menu. Thank you.");
-                break;
-            } else {
-                System.out.println("Who's information would you like to read? Press 0 to go back to menu");
-                for (int i = 0; i < list.size(); i++) {
-                    System.out.println(i + 1 + ". " + list.get(i).getName());
-                }
-                position = scanner.nextInt();
-                if (position <= 0 || position > list.size()) {
-                    break;
-                } else {
-                    int arrayIndex = position - 1;
-                    customer = list.get(arrayIndex);
 
-                    System.out.println("Name: " + customer.getName());
-                    System.out.println("DOB: " + customer.getDob());
-                    System.out.println("Social Security: " + customer.getSS());
-                    System.out.println("Sex: " + customer.getSex());
-                    System.out.println("Citizen: " + customer.getCitizen());
-                    System.out.println("Veteran: " + customer.getVeteran());
-                    System.out.println("Credit Balance: " + customer.getCreditBalance());
-                    System.out.println("Checking Balance: " + customer.getCheckingBalance());
-
-                    System.out.println("\nGo Back To Menu?[Y/n]");
-                    switch (scanner.next()) {
-                        case "y":
-                        case "Y":
-                        case "Yes":
-                        case "yes":
-                            customer = new Customer();
-                            break;
-                        case "n":
-                        case "N":
-                        case "No":
-                        case "no":
-                            read();
-                            break;
-                    }
-                }
-                break;
+        if (list.isEmpty()) {
+            System.out.println("There are no accounts. Please create new accounts in the menu. Thank you.");
+        } else {
+            System.out.println("Who's information would you like to read? Press 0 to go back to menu");
+            for (int i = 0; i < list.size(); i++) {
+                System.out.println(i + 1 + ". " + list.get(i).getName());
+                System.out.println("BankAccount#: " + list.get(i).getID());
+                System.out.println();
             }
-        } while (position != 0 && !(list.isEmpty()));
+            position = scanner.nextInt();
+            if (position <= 0 || position > list.size()) {
+                System.out.println("Going back to main menu.");
+            } else {
+                int arrayIndex = position - 1;
+                customer = list.get(arrayIndex);
+
+                System.out.println("Name: " + customer.getName());
+                System.out.println("DOB: " + customer.getDob());
+                System.out.println("Social Security: " + customer.getSS());
+                System.out.println("Sex: " + customer.getSex());
+                System.out.println("Citizen: " + customer.getCitizen());
+                System.out.println("Veteran: " + customer.getVeteran());
+                System.out.println("Credit Balance: " + customer.getCreditBalance());
+                System.out.println("Checking Balance: " + customer.getCheckingBalance());
+
+                System.out.println("\nGo Back To Menu?[Y/n]");
+                switch (scanner.next()) {
+                    case "y":
+                    case "Y":
+                    case "Yes":
+                    case "yes":
+                        customer = new Customer();
+                        break;
+                    case "n":
+                    case "N":
+                    case "No":
+                    case "no":
+                        read();
+                        break;
+                }
+            }
+        }
     }
 
     private void update() {
@@ -297,16 +324,12 @@ public class Teller implements BankTeller {
                     }
                 }
                 System.out.println("\nGo Back To Menu?[Y/n]");
-                switch (scanner.next()) {
+                switch (scanner.next().toLowerCase()) {
                     case "y":
-                    case "Y":
-                    case "Yes":
                     case "yes":
                         isList = false;
                         break;
                     case "n":
-                    case "N":
-                    case "No":
                     case "no":
                         list();
                         break;
