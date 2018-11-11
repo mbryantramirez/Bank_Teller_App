@@ -1,67 +1,646 @@
 package Java_Bank_Pursuit_HW_FABIAN_KELVEEN;
 
-import java.util.Date;
-import java.util.HashMap;
+import java.util.InputMismatchException;
+import java.util.Scanner;
 
-public class Customer extends User {
-    private static String fname;
-    private static String mName;
-    private static String lName;
-    private static final String[] sArray = {"Jr", "Sr", "II", "III", "IV", "V", ""};
-    private static String suffix;
+public class Customer extends Teller {
+    Scanner scanner = new Scanner(System.in);
+    String choice, salary, amount;
+    double max;
 
 
-    public static String getFname() {
-        return fname;
-    }
+    Name name = new Name();
+    DateOfBirth dob = new DateOfBirth();
+    SocialSecurity ss = new SocialSecurity();
+    Sex sex = new Sex();
+    Citizen citizen = new Citizen();
+    Veteran veteran = new Veteran();
+    BankAccount bankAccount = new BankAccount();
 
-    public static void setFname(String fname) {
-        Customer.fname = fname;
-    }
+    public void createNewCustomer() {
+        do {
+            System.out.println("What is your first name? [Write none if you don't have one]");
+            name.setfName(scanner.next());
+        } while (name.getfName() == null);
 
-    public static String getmName() {
-        return mName;
-    }
+        do {
+            System.out.println("What is your middle name? [Write none if you don't have one]");
+            name.setmName(scanner.next());
+        } while (name.getmName() == null);
 
-    public static void setmName(String mName) {
+        do {
+            System.out.println("What is your last name? [Write none if you don't have one]");
+            name.setlName(scanner.next());
+        } while (name.getlName() == null);
 
-        if (mName.toLowerCase().equals("none")) {
-            Customer.mName = "";
-        } else {
-            Customer.mName = mName;
-        }
+        do {
+            System.out.println("Suffix? [1.Jr, 2.Sr, 3.II 4.III 5.IV 6.V 7.None]");
+            name.setSuffix(scanner.next());
+        } while (name.getSuffix() == null);
 
-    }
-
-    public static String getlName() {
-        return lName;
-    }
-
-    public static void setlName(String lName) {
-        Customer.lName = lName;
-    }
-
-    public static String getSuffix() {
-        return suffix;
-    }
-
-    public static void setSuffix(int choice) {
-        for (int i = 0; i < 7; i++) {
-            if (choice == i + 1) {
-                suffix = sArray[i];
+        do {
+            try {
+                System.out.println("What is your date of birth? [XX/XX/XXXX]");
+                choice = scanner.next();
+                dob.setMonth(choice.substring(0, 2));
+                dob.setDay(choice.substring(3, 5));
+                dob.setYear(choice.substring(6, 10));
+            } catch (StringIndexOutOfBoundsException e) {
+                dob.setYear("null");
             }
-        }
+        } while (dob.getYear() == null || dob.getDay() == null || dob.getMonth() == null);
+
+        do {
+            System.out.println("What is your sex? [M/f]");
+            sex.setSex(scanner.next());
+        } while (sex.getSex() == null);
+
+
+        do {
+            try {
+                System.out.println("What is your social security? [XXX-XX-XXXX]");
+                choice = scanner.next();
+                ss.setSocialSecurity1(choice.substring(0, 3));
+                ss.setSocialSecurity2(choice.substring(4, 6));
+                ss.setSocialSecurity3(choice.substring(7, 11));
+            } catch (StringIndexOutOfBoundsException e) {
+                ss.setSocialSecurity1("null");
+            }
+        } while (ss.getSocialSecurity1() == null || ss.getSocialSecurity2() == null || ss.getSocialSecurity3() == null);
+
+        do {
+            System.out.println("Are you a U.S. citizen?[Y/n]");
+            citizen.setCitizen(scanner.next());
+        } while (citizen.getCitizen() == null);
+
+        do {
+            System.out.println("Are a you a veteran? Choose below:");
+            System.out.println("1. I am a US veteran.");
+            System.out.println("2. I am not a US veteran.");
+            System.out.println("3. I do not wish to answer.");
+            veteran.setVeteran(scanner.next());
+        } while (veteran.getVeteran() == null);
+
+
+        do {
+            System.out.println("Would you like to sign up for a credit card account? [Y/n]");
+            choice = scanner.next();
+
+            switch (choice) {
+                case "y":
+                case "Y":
+                case "Yes":
+                case "yes":
+                    do {
+                        System.out.println("Please input a salary, so that we can determine how much credit we can offer you.");
+                        salary = scanner.next();
+                        bankAccount.setCredit(salary);
+                    } while (bankAccount.getCredit() <= 0);
+                    break;
+                case "n":
+                case "N":
+                case "No":
+                case "no":
+                    break;
+                default:
+                    choice = null;
+                    break;
+            }
+        } while (choice == null);
+
+        do {
+            System.out.println("Would you like to sign up for a checking account? [Y/n]");
+            choice = scanner.next();
+
+            switch (choice.toLowerCase()) {
+                case "y":
+                case "yes":
+                    do {
+                        System.out.println("Please enter how much you would like to deposit. Minimum = $25.00");
+                        choice = scanner.next();
+                        if (Double.parseDouble(choice) >= 25.00) {
+                            bankAccount.setChecking(Double.parseDouble(choice));
+                        } else {
+                            bankAccount.setChecking(0.0);
+                        }
+                    } while (bankAccount.getChecking() <= 0);
+                    break;
+                case "n":
+                case "no":
+                    break;
+                default:
+                    choice = null;
+                    break;
+            }
+        } while (choice == null);
     }
 
-    public static void setDOB(String month, String day, String year) { //FIXME: We need to set boundaries for our function.
-        DateOfBirth.setMonth(month);
-        DateOfBirth.setDay(day);
-        DateOfBirth.setYear(year);
+
+    public String getSex() {
+        return sex.getSex();
     }
 
-    public static String getDOB() {
-        return DateOfBirth.getMonth() + "/" + DateOfBirth.getDay() + "/" + DateOfBirth.getYear();
+    public void editSex() {
+        boolean isSex = true;
+
+        do {
+            System.out.println("Which information would you like to change?");
+            System.out.println("1. Sex");
+            System.out.println("2. Exit");
+
+            switch (scanner.nextInt()) {
+                case 1:
+                    System.out.println("Current Sex: " + sex.getSex());
+                    do {
+                        System.out.println("New Sex:[M/f]");
+                        sex.setSex(scanner.next());
+                    } while (sex.getSex() == null);
+                    break;
+                case 2:
+                    System.out.println("Sex: " + getSex());
+                    System.out.println("Is this information correct?[Y/n]");
+
+                    switch (scanner.next()) {
+                        case "y":
+                        case "Y":
+                        case "Yes":
+                        case "yes":
+                            isSex = false;
+                            break;
+                        case "n":
+                        case "N":
+                        case "no":
+                        case "No":
+                            break;
+                        default:
+                            System.out.println("ERROR: Wrong answer. Please try again");
+                            break;
+                    }
+                    break;
+                default:
+                    System.out.println("Wrong answer. Please try again");
+            }
+        } while (isSex);
     }
 
+    public String getName() {
+        return name.getfName() + " " + name.getmName() + " " + name.getlName() + " " + name.getSuffix();
+    }
+
+    public void editName() {
+        boolean isEditing = true;
+
+        do {
+            System.out.println("Which information would you like to change?");
+            System.out.println("1. First Name");
+            System.out.println("2. Middle Name");
+            System.out.println("3. Last Name");
+            System.out.println("4. Suffix");
+            System.out.println("5. Exit");
+
+            switch (scanner.next()) {
+
+                case "1":
+                    System.out.println("Current First Name: " + name.getfName());
+                    System.out.println("New First Name: ");
+                    name.setfName(scanner.next());
+                    break;
+                case "2":
+                    System.out.println("Current Middle Name: " + name.getmName());
+                    System.out.println("New Middle Name: ");
+                    name.setmName(scanner.next());
+                    break;
+                case "3":
+                    System.out.println("Current Last Name: " + name.getlName());
+                    System.out.println("New Last Name: ");
+                    name.setlName(scanner.next());
+                    break;
+                case "4":
+                    System.out.println("Current Suffix: " + name.getSuffix());
+                    System.out.println("New Suffix [1.Jr, 2.Sr, 3.II 4.III 5.IV 6.V 7.None]: ");
+                    name.setSuffix(scanner.next());
+                    break;
+                case "5":
+                    System.out.println("Name: " + getName());
+                    System.out.println("Is this information correct?[Y/n]");
+                    switch (scanner.next()) {
+                        case "y":
+                        case "Y":
+                        case "Yes":
+                        case "yes":
+                            isEditing = false;
+                            break;
+                        case "n":
+                        case "N":
+                        case "no":
+                        case "No":
+                            break;
+                        default:
+                            System.out.println("ERROR: Wrong answer. Please try again");
+                            break;
+                    }
+                    break;
+                default:
+                    System.out.println("ERROR: Wrong answer. Please try again.");
+                    break;
+            }
+        } while (isEditing);
+
+    }
+
+    public String getDob() {
+        return dob.getMonth() + "/" + dob.getDay() + "/" + dob.getYear();
+    }
+
+    public void editDob() {
+        boolean isBirth = true;
+
+        do {
+            System.out.println("Which information would you like to change?");
+            System.out.println("1. Month");
+            System.out.println("2. Day");
+            System.out.println("3. Year");
+            System.out.println("4. Exit");
+
+            switch (scanner.next()) {
+                case "1":
+                    System.out.println("Current Month: " + dob.getMonth());
+                    do {
+                        System.out.println("New Month: [XX]");
+                        dob.setMonth(scanner.next());
+                    } while (dob.getMonth() == null);
+                    break;
+                case "2":
+                    System.out.println("Current Day: " + dob.getDay());
+                    do {
+                        System.out.println("New Day: [XX]");
+                        dob.setDay(scanner.next());
+                    } while (dob.getDay() == null);
+                    break;
+                case "3":
+                    System.out.println("Current Year: " + dob.getYear());
+                    do {
+                        System.out.println("New Year: [XXXX]");
+                        dob.setYear(scanner.next());
+                    } while (dob.getYear() == null);
+                    break;
+                case "4":
+                    System.out.println("DOB: " + getDob());
+                    System.out.println("Is this information correct?[Y/n]");
+                    switch (scanner.next()) {
+                        case "y":
+                        case "Y":
+                        case "Yes":
+                        case "yes":
+                            isBirth = false;
+                            break;
+                        case "n":
+                        case "N":
+                        case "no":
+                        case "No":
+                            break;
+                        default:
+                            System.out.println("ERROR: Wrong answer. Please try again");
+                            break;
+                    }
+                    break;
+                default:
+                    System.out.println("ERROR: Wrong answer. Please try again");
+                    break;
+            }
+        } while (isBirth);
+    }
+
+    public String getSS() {
+        return ss.getSocialSecurity1() + "-" + ss.getSocialSecurity2() + "-" + ss.getSocialSecurity3();
+    }
+
+    public void editSS() {
+        boolean isSS = true;
+
+        do {
+            System.out.println("Which information would you like to change?");
+            System.out.println("1. Social Security");
+            System.out.println("2. Exit");
+
+            switch (scanner.next()) {
+                case "1":
+                    System.out.println("Current Social Security: " + getSS());
+                    do {
+                        try {
+                            System.out.println("New Social Security: [XXX-XX-XXXX]");
+                            choice = scanner.next();
+                            ss.setSocialSecurity1(choice.substring(0, 3));
+                            ss.setSocialSecurity2(choice.substring(4, 6));
+                            ss.setSocialSecurity3(choice.substring(7, 11));
+                        } catch (StringIndexOutOfBoundsException e) {
+                            ss.setSocialSecurity1("null");
+                        }
+                    }
+                    while (ss.getSocialSecurity3() == null || ss.getSocialSecurity2() == null || ss.getSocialSecurity1() == null);
+                    break;
+                case "2":
+                    System.out.println("Social Security: " + getSS());
+                    System.out.println("Is this information correct?[Y/n]");
+
+                    switch (scanner.next()) {
+                        case "y":
+                        case "Y":
+                        case "Yes":
+                        case "yes":
+                            isSS = false;
+                            break;
+                        case "n":
+                        case "N":
+                        case "no":
+                        case "No":
+                            break;
+                        default:
+                            System.out.println("Wrong answer. Please try again");
+                            break;
+                    }
+                    break;
+                default:
+                    System.out.println("Wrong answer. Please try again");
+                    break;
+            }
+        } while (isSS);
+
+
+    }
+
+    public void editCitizen() {
+        boolean isCitizen = true;
+
+        do {
+            System.out.println("Which information would you like to change.");
+            System.out.println("1. Citizen");
+            System.out.println("2. Exit");
+
+            switch (scanner.next()) {
+                case "1":
+                    System.out.println("Current Citizen: " + getCitizen());
+                    do {
+                        System.out.println("New Citizen[Y/n]: ");
+                        citizen.setCitizen(scanner.next());
+                    } while (citizen.getCitizen() == null);
+                    break;
+                case "2":
+                    System.out.println("Citizen: " + getCitizen());
+                    System.out.println("Is this information correct?[Y/n]");
+
+                    switch (scanner.next()) {
+                        case "y":
+                        case "Y":
+                        case "Yes":
+                        case "yes":
+                            isCitizen = false;
+                            break;
+                        case "n":
+                        case "N":
+                        case "no":
+                        case "No":
+                            break;
+                        default:
+                            System.out.println("Wrong answer. Please try again");
+                            break;
+                    }
+                    break;
+                default:
+                    System.out.println("Wrong answer. Please try again");
+                    break;
+            }
+        } while (isCitizen);
+    }
+
+    public String getCitizen() {
+        return citizen.getCitizen();
+    }
+
+    public void editVeteran() {
+        boolean isVeteran = true;
+
+        do {
+            System.out.println("Which information would you like to change.");
+            System.out.println("1. Veteran");
+            System.out.println("2. Exit");
+
+            switch (scanner.next()) {
+                case "1":
+                    System.out.println("Veteran: " + getVeteran());
+                    do {
+                        System.out.println("New Veteran: ");
+                        System.out.println("1. I am a US veteran.");
+                        System.out.println("2. I am not a US veteran.");
+                        System.out.println("3. I do not wish to answer.");
+                        veteran.setVeteran(scanner.next());
+                    } while (veteran.getVeteran() == null);
+                    break;
+                case "2":
+                    System.out.println("Veteran: " + getVeteran());
+                    System.out.println("Is this information correct?[Y/n]");
+
+                    switch (scanner.next()) {
+                        case "y":
+                        case "Y":
+                        case "Yes":
+                        case "yes":
+                            isVeteran = false;
+                            break;
+                        case "n":
+                        case "N":
+                        case "no":
+                        case "No":
+                            break;
+                        default:
+                            System.out.println("Wrong answer. Please try again");
+                            break;
+                    }
+                    break;
+                default:
+                    System.out.println("Wrong answer. Please try again");
+                    break;
+            }
+        } while (isVeteran);
+    }
+
+    public String getVeteran() {
+        return veteran.getVeteran();
+    }
+
+    public double getCreditBalance() {
+        return bankAccount.getCredit();
+    }
+
+    public double getCheckingBalance() {
+        return bankAccount.getChecking();
+    }
+
+    public void editAccount() {
+        boolean isAccount = true;
+
+        do {
+            System.out.println("Which information would you like to change?");
+            System.out.println("1. Credit");
+            System.out.println("2. Checking");
+            System.out.println("3. Exit");
+
+            switch (scanner.next()) {
+                case "1":
+                case "credit":
+                case "Credit":
+                case "CREDIT":
+                    System.out.println("What would you like to do?");
+                    System.out.println("1. Deposit");
+                    System.out.println("2. Withdraw");
+                    System.out.println("3. Update Salary");
+                    System.out.println("4. Exit");
+
+                    switch (scanner.next()) {
+                        case "1":
+                        case "Deposit":
+                        case "deposit":
+                        case "DEPOSIT":
+                            System.out.println("Current Amount: " + bankAccount.getCredit());
+                            System.out.println("Max Amount: " + bankAccount.getMaxCredit());
+                            do {
+                                try {
+                                    System.out.println("What is the amount that you would like deposit?");
+                                    amount = scanner.next();
+                                    bankAccount.depositCredit(amount);
+                                    System.out.println("New Amount: " + bankAccount.getCredit() + "\n");
+                                } catch (NumberFormatException e) {
+                                    amount = null;
+                                }
+                            } while (amount == null);
+                            break;
+                        case "2":
+                            System.out.println("Current Amount: " + bankAccount.getCredit());
+                            System.out.println("Max Amount: " + bankAccount.getMaxCredit());
+                            do{
+                                try{
+                                    if(max >= 300){
+                                        System.out.println("Reached max limit of withdrawal for the week. Please try again next week.");
+                                        break;
+                                    }else {
+                                        System.out.println("What is the amount that you would like to withdraw?($300.00 Max Limit)");
+                                        amount = scanner.next();
+                                        if(Double.parseDouble(amount) <= 300) {
+                                            max = max + Double.parseDouble(amount);
+                                        }
+                                        bankAccount.creditWithdrawal(amount);
+                                        System.out.println("Withdrew: " + amount);
+                                        System.out.println("New Amount: " + bankAccount.getCredit() + "\n");
+                                    }
+                                }catch(NumberFormatException e){
+                                    amount = null;
+                                }
+                            }while(amount == null);
+                            break;
+                        case "3":
+                            System.out.println("Current Salary: " + salary);
+                            salary = null;
+                            do {
+                                try {
+                                    System.out.println("What is your new salary?");
+                                    salary = scanner.next();
+                                    bankAccount.setCredit(salary);
+                                    System.out.println("New Max Credit: " + bankAccount.getMaxCredit() + "\n");
+                                } catch (NumberFormatException e) {
+                                    salary = null;
+                                }
+                            } while (salary == null);
+                            break;
+                        case "4":
+                        case "Exit":
+                        case "exit":
+                        case "EXIT":
+                            break;
+                    }
+                    break;
+                case "2":
+                case "checking":
+                case "Checking":
+                case "CHECKING":
+                    System.out.println("What would you like to do?");
+                    System.out.println("1. Deposit");
+                    System.out.println("2. Withdraw");
+                    System.out.println("3. Exit");
+
+                    switch (scanner.next()) {
+                        case "1":
+                        case "Deposit":
+                        case "deposit":
+                        case "DEPOSIT":
+                            do {
+                                try {
+                                    System.out.println("Current amount: " + bankAccount.getChecking());
+                                    System.out.println("What is the amount that you would like deposit?");
+                                    amount = scanner.next();
+                                    bankAccount.depositChecking(amount);
+                                    System.out.println("New Amount: " + bankAccount.getChecking() + "\n");
+
+                                } catch (NumberFormatException e) {
+                                    amount = null;
+                                }
+                            } while (amount == null);
+                            break;
+                        case "2":
+                        case "Withdraw":
+                        case "withdraw":
+                        case "WITHDRAW":
+                            do{
+                                try{
+                                    System.out.println("Current amount: " + bankAccount.getChecking());
+                                    System.out.println("What is that amount that you would like withdraw");
+                                    amount = scanner.next();
+                                    bankAccount.checkingWithdrawal(amount);
+                                    System.out.println("New Amount: " + bankAccount.getChecking() + "\n");
+                                }catch(NumberFormatException e){
+                                    amount = null;
+                                }
+                            }while(amount == null);
+                            break;
+                        case "4":
+                        case "Exit":
+                        case "exit":
+                        case "EXIT":
+                            break;
+                        default:
+                            System.out.println("Wrong entry. Please try again");
+                            break;
+                    }
+                    break;
+                case "3":
+                case "Exit":
+                case "exit":
+                case "EXIT":
+                    System.out.println("Credit: " + bankAccount.getCredit());
+                    System.out.println("Checking: " + bankAccount.getChecking());
+                    System.out.println("Is this information correct?[Y/n]");
+                    switch (scanner.next()) {
+                        case "y":
+                        case "Y":
+                        case "Yes":
+                        case "yes":
+                            isAccount = false;
+                            break;
+                        case "n":
+                        case "N":
+                        case "No":
+                        case "no":
+                            break;
+                        default:
+                            System.out.println("Wrong entry. Please try again");
+                            break;
+                    }
+                    break;
+                default:
+                    System.out.println("Wrong entry. Please try again");
+                    break;
+
+            }
+        } while (isAccount);
+    }
 }
 
